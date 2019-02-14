@@ -1,4 +1,8 @@
 import { makeExecutableSchema } from 'graphql-tools'
+import http from 'request-promise-json'
+
+const MOVIE_DB_API_KEY = process.env.MOVIE_DB_API_KEY
+const OMDB_API_KEY =  process.env.OMDB_API_KEY
 
 const typeDefs = `
     type Query {
@@ -8,10 +12,7 @@ const typeDefs = `
     type Mutation {
         upvoteMovie (
             movieId: Int!
-        ): Movie 
-    }
-
-    type Mutation {
+        ): Movie,
         rateMovie (
             movieId: Int!
             rating: ReviewInput!
@@ -33,6 +34,7 @@ const typeDefs = `
         id: ID!
         budget(currency: Currency = EUR): Int
         title: String!
+        type: ID!
         media_type: String!
         duration: Int!
         box_office: Int!
@@ -40,16 +42,17 @@ const typeDefs = `
         production_companies: [ProductionCompany]
     }
 
-    type TVShow implements Media {
-        id: ID!
-        title: String!
-        media_type: String!
-        episodes: [Episode]!
-        running: Boolean
-    }
+
     type ProductionCompany {
         name: String,
         id: Int        
+    }
+    type TVShow implements Media {
+        id: ID!
+        type: ID!
+        title: String!
+        media_type: String!
+        running: Boolean
     }
 
     enum Currency {
@@ -58,9 +61,27 @@ const typeDefs = `
         USD
       }
 
-    union SearchResult = Movie | TVShow | TVShowEpisode | Company | Person
+    union SearchResult = Movie | TVShow 
+
 
 `;
+
+// | TVShowEpisode | Company | Person
+
+// type TVShow implements Media {
+//     id: ID!
+//     title: String!
+//     media_type: String!
+//     running: Boolean
+// }
+
+// type TVShow implements Media {
+//     id: ID!
+//     title: String!
+//     media_type: String!
+//     episodes: [TVShowEpisode]!
+//     running: Boolean
+// }
 
 const resolvers = {
 
