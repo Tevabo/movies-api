@@ -103,6 +103,9 @@ const resolvers = {
           return http
           .get(`https://api.themoviedb.org/3/discover/movie?api_key=${MOVIE_DB_API_KEY}&primary_release_year=${args.year}&sort_by=vote_average.desc`)
           .then(response => response.results)
+
+ 
+        
       },
     },
   };
